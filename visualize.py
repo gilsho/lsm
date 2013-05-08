@@ -15,7 +15,7 @@ def wavToArray(filepath):
 	return wav
 
 
-# plot(wavToArray('./dat/wav/wav1.dat')); show()
+plot(wavToArray('./data/wav/wav1.dat')); show()
 
 
 
