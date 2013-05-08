@@ -29,6 +29,7 @@ def generateSpikes(filepath, params):
 	times = []
 	N = params['N']
 	sparsity = params['sparsity']
+	Ain = params['Ain']
 
 	with open(filepath, 'r') as f: # read in designated spike rates
 		for line in f:
@@ -40,10 +41,13 @@ def generateSpikes(filepath, params):
 	
 	for y_targ in xrange(sparsity/2, N, sparsity): # generate file for each neuron in sparsity pattern
 		for x_targ in xrange(sparsity/2, N, sparsity):
-			# TODO, filter the spikes according to weights
+			y_idx = (y_targ - sparsity/2) / sparsity
+			x_idx = (x_targ - sparsity/2) / sparsity
+			w = Ain[0, x_idx, y_idx]
 			with open('./data/stim/training/y' + str(y_targ) + '_x' + str(x_targ) + '.txt', 'w') as f:
 				for spk_time in spk_times:
-					f.write(str(spk_time) + '\n')
+					if np.random.random() < w:
+						f.write(str(spk_time) + '\n')
 
 params = setParams()
 generateSpikes('./data/wav/wav1.dat', params)

@@ -5,6 +5,7 @@ def setParams():
 	N = 32
 	sparsity = 8
 	n_inputs = 1
-	Ain = np.random.random((n_inputs, N**2 / sparsity**2))
+	Ain = np.random.random((n_inputs, N / sparsity, N / sparsity))
+	print "input weights:\n" + str(Ain)
 	params = {'N':32, 'sparsity':8, 'Ain':Ain}
 	return params
