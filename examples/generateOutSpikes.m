@@ -2,7 +2,7 @@ function generateOutSpikes(wav,numfiles,outdir)
 %GENERATEOUTSPIKES generates outspikes based on a waveform vector
     
     v = vectorizeWav(wav,0.001);
-    muscale = 0.2;
+    muscale = 0.1;
     baserate = 0.002;
 
     mkdir(outdir);

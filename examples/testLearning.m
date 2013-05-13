@@ -8,8 +8,10 @@ tstep = 0.001;
 maxtime = 1;
 datadir = 'data/';
 outdir = strcat(datadir,'out/ml/');
+wavfile = 'wav/heavyside.dat';
+numfiles = 150;
 
-generateOutSpikes(load('wav2.dat'),20,outdir);
+generateOutSpikes(load(wavfile),numfiles,outdir);
 
 fnames = dir(strcat(outdir,'*.spk'));
 numfids = length(fnames);
@@ -20,7 +22,7 @@ for i = 1:numfids
 end
 
 %figure; plot(spiketimes(:,1));
-v = vectorizeWav(load(strcat(datadir,'wav/wav2.dat')),tstep);
+v = vectorizeWav(load(strcat(datadir,wavfile)),tstep);
 w = learnWeights(spiketimes,v);
 figure; 
 subplot(211);
