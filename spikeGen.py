@@ -1,9 +1,12 @@
+#!/usr/bin/env python
+
 # Input:
 # file of times and spike rates
 # file of connection weights
 # Output:
 # files of spike times for neurogrid drivers
 import numpy as np
+import os
 from setParams import setParams
 # from matplotlib.pyplot import *
 # from visualize import wavToArray
@@ -21,7 +24,7 @@ def generateSpikeTimes(times, rates):
 	return spk_times
 	
 
-def generateSpikes(filepath, params):
+def generateSpikes(filepath, params, exp_dir):
 	# wav = wavToArray(filepath)
 	# plot(wav)
 	# show()
@@ -44,10 +47,17 @@ def generateSpikes(filepath, params):
 			y_idx = (y_targ - sparsity/2) / sparsity
 			x_idx = (x_targ - sparsity/2) / sparsity
 			w = Ain[0, x_idx, y_idx]
-			with open('./data/stim/training/y' + str(y_targ) + '_x' + str(x_targ) + '.txt', 'w') as f:
+			with open(exp_dir + 'y' + str(y_targ) + '_x' + str(x_targ) + '.txt', 'w') as f:
 				for spk_time in spk_times:
 					if np.random.random() < w:
 						f.write(str(spk_time) + '\n')
 
+exp_num = 1
+exp_dir = './data/exp' + str(exp_num) + '/';
+
+d = os.path.dirname(exp_dir)
+if not os.path.exists(d):
+	os.makedirs(d)
+
 params = setParams()
-generateSpikes('./data/wav/wav1.dat', params)
+generateSpikes('./data/wav/wav1.dat', params, exp_dir)
