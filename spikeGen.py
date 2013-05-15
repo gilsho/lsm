@@ -11,13 +11,15 @@ from setParams import setParams
 # from matplotlib.pyplot import *
 # from visualize import wavToArray
 
-def generateSpikeTimes(times, rates):
+def generateSpikeTimes(durations, rates):
 	spk_times = []
-	for i, rate in enumerate(rates[:-1]): # generate spike times
-		t = times[i]
-		while t < times[i+1]:
+	t = 0.
+	t_stop = 0.
+	for i, rate in enumerate(rates): # generate spike times
+		t_stop = t_stop + durations[i]
+		while t < t_stop:
 			if rate == 0.: # skip ahead to next rate 
-				t = times[i+1]
+				t = t_stop
 			else: # generate spikes
 				t = t + 1000. * np.random.exponential(1./rate)	# next spike time. 
 				spk_times.append(t)
@@ -60,4 +62,4 @@ if not os.path.exists(d):
 	os.makedirs(d)
 
 params = setParams()
-generateSpikes('./data/wav/wav1.dat', params, exp_dir)
+generateSpikes('./data/wav/wav2.dat', params, exp_dir)
