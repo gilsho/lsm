@@ -9,7 +9,7 @@ maxtime = 1;
 datadir = 'data/';
 outdir = strcat(datadir,'out/ml/');
 wavfile = 'wav/heavyside.dat';
-numfiles = 150;
+numfiles = 5;
 
 generateOutSpikes(load(wavfile),numfiles,outdir);
 

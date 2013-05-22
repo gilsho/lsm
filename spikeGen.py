@@ -7,6 +7,7 @@
 # files of spike times for neurogrid drivers
 import numpy as np
 import os
+import argparse
 from setParams import setParams
 # from matplotlib.pyplot import *
 # from visualize import wavToArray
@@ -33,7 +34,7 @@ def generateSpikes(filepath, params, exp_dir):
 	rates = []
 	times = []
 	N = params['N']
-	sparsity = params['sparsity']
+	sparsity_in = params['sparsity_in']
 	Ain = params['Ain']
 
 	with open(filepath, 'r') as f: # read in designated spike rates
@@ -44,15 +45,20 @@ def generateSpikes(filepath, params, exp_dir):
 	
 	spk_times = generateSpikeTimes(times, rates)
 	
-	for y_targ in xrange(sparsity/2, N, sparsity): # generate file for each neuron in sparsity pattern
-		for x_targ in xrange(sparsity/2, N, sparsity):
-			y_idx = (y_targ - sparsity/2) / sparsity
-			x_idx = (x_targ - sparsity/2) / sparsity
+	for y_targ in xrange(sparsity_in/2, N, sparsity_in): # generate file for each neuron in sparsity pattern
+		for x_targ in xrange(sparsity_in/2, N, sparsity_in):
+			y_idx = (y_targ - sparsity_in/2) / sparsity_in
+			x_idx = (x_targ - sparsity_in/2) / sparsity_in
 			w = Ain[0, x_idx, y_idx]
 			with open(exp_dir + 'y' + str(y_targ) + '_x' + str(x_targ) + '.txt', 'w') as f:
 				for spk_time in spk_times:
 					if np.random.random() < w:
-						f.write(str(spk_time) + '\n')
+						delta = np.random.random()
+						f.write(str(spk_time + delta) + '\n')
+
+parser = argparse.ArgumentParser(description='Generate spikes')
+parser.add_argument('wavfile', type=str, help='a wav file listing spike rates and durations')
+args = parser.parse_args()
 
 exp_num = 1
 exp_dir = './data/exp' + str(exp_num) + '/';
@@ -62,4 +68,5 @@ if not os.path.exists(d):
 	os.makedirs(d)
 
 params = setParams()
-generateSpikes('./data/wav/wav2.dat', params, exp_dir)
+print 'Ar[1].x1 = ' + str(params['Ar'][1].x1)
+generateSpikes('./data/wav/' + args.wavfile + '.dat', params, exp_dir)

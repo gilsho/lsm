@@ -8,13 +8,13 @@ function generateOutSpikes(wav,numfiles,outdir)
     mkdir(outdir);
     delete(strcat(outdir,'*.spk'));
     
-    %spikebins = zeros(length(v),numfiles);
+    spikebins = zeros(length(v),numfiles);
     for i=1:numfiles
         f = fopen(strcat(outdir,num2str(i),'.spk'),'w');
         for j=1:length(v)
            r = rand;
            didspike = (v(j)*muscale > r) || (baserate > r);
-           %spikebins(j,i) = didspike;
+           spikebins(j,i) = didspike;
            if (didspike) 
               fprintf(f,strcat(num2str((j+rand)),'\n'));
            end
@@ -22,7 +22,11 @@ function generateOutSpikes(wav,numfiles,outdir)
         fclose(f);
     end
     
-    %figure; plot(spikebins(:,1));
-
+    figure; plot(spikebins(:,1));
+     figure; plot(spikebins(:,2));
+      figure; plot(spikebins(:,3));
+       figure; plot(spikebins(:,4));
+        figure; plot(spikebins(:,5));
+    
 end
 
