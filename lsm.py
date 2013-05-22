@@ -55,7 +55,7 @@ def runExperiment(params, exp_dir):
 	StopExp()
 	print 'Done'
 
-exp_num = 1
+exp_num = 4
 params = setParams()
 print 'tau_syn is:' + str(params['tau_syn'])
 exp_dir = './lsm/data/exp' + str(exp_num) + '/';

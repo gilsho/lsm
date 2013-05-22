@@ -60,7 +60,7 @@ parser = argparse.ArgumentParser(description='Generate spikes')
 parser.add_argument('wavfile', type=str, help='a wav file listing spike rates and durations')
 args = parser.parse_args()
 
-exp_num = 1
+exp_num = 4
 exp_dir = './data/exp' + str(exp_num) + '/';
 
 d = os.path.dirname(exp_dir)
@@ -68,5 +68,4 @@ if not os.path.exists(d):
 	os.makedirs(d)
 
 params = setParams()
-print 'Ar[1].x1 = ' + str(params['Ar'][1].x1)
 generateSpikes('./data/wav/' + args.wavfile + '.dat', params, exp_dir)

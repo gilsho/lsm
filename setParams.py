@@ -38,8 +38,8 @@ def setParams():
 	sparsity_in = 16 # number of positions to skip
 	n_inputs = 1
 	Ain = np.random.random((n_inputs, N / sparsity_in, N / sparsity_in))
-	#Ar = generateReserviorMatrix(N)
-	Ar = generateTestMatrix(N)
+	Ar = generateReserviorMatrix(N)
+	#Ar = generateTestMatrix(N)
 	params = {'N':N, 
 			  'sparsity_in':sparsity_in, 
 			  'x0':[1.0,0.0],
