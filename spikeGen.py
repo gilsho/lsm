@@ -27,7 +27,7 @@ def generateSpikeTimes(durations, rates):
 	return spk_times
 	
 
-def generateSpikes(filepath, params, exp_dir):
+def generateSpikes(filepath, params, exp_dir, ystart,yend):
 	# wav = wavToArray(filepath)
 	# plot(wav)
 	# show()
@@ -45,7 +45,7 @@ def generateSpikes(filepath, params, exp_dir):
 	
 	spk_times = generateSpikeTimes(times, rates)
 	
-	for y_targ in xrange(sparsity_in/2, N, sparsity_in): # generate file for each neuron in sparsity pattern
+	for y_targ in xrange(ystart+sparsity_in, yend, sparsity_in): # generate file for each neuron in sparsity pattern
 		for x_targ in xrange(sparsity_in/2, N, sparsity_in):
 			y_idx = (y_targ - sparsity_in/2) / sparsity_in
 			x_idx = (x_targ - sparsity_in/2) / sparsity_in
@@ -57,10 +57,12 @@ def generateSpikes(filepath, params, exp_dir):
 						f.write(str(spk_time + delta) + '\n')
 
 parser = argparse.ArgumentParser(description='Generate spikes')
-parser.add_argument('wavfile', type=str, help='a wav file listing spike rates and durations')
+parser.add_argument('exp_num', type=int, help='experiment number')
+parser.add_argument('wavfile1', type=str, help='a wav file listing spike rates and durations')
+parser.add_argument('wavfile2', type=str, help='a wav file listing spike rates and durations')
 args = parser.parse_args()
 
-exp_num = 4
+exp_num = args.exp_num
 exp_dir = './data/exp' + str(exp_num) + '/';
 
 d = os.path.dirname(exp_dir)
@@ -68,4 +70,9 @@ if not os.path.exists(d):
 	os.makedirs(d)
 
 params = setParams()
-generateSpikes('./data/wav/' + args.wavfile + '.dat', params, exp_dir)
+datadir = './data/wav/'
+wavpath1 = datadir + args.wavfile1
+wavpath2 = datadir + args.wavfile2
+generateSpikes(wavpath1, params, exp_dir,0,params['N']/2)
+generateSpikes(wavpath2, params, exp_dir,params['N']/2,params['N'])
+

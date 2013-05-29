@@ -3,7 +3,7 @@ sys.path.append("./lsm/")
 import os
 import numpy as np
 import time
-from setParams import setParams
+import setParams
 import cPickle
 
 def runExperiment(params, exp_dir):
@@ -30,21 +30,21 @@ def runExperiment(params, exp_dir):
 		for j in range(params['N']):
 			g.HorizontalProject(p2.Output(0),i,j,p1.Input(0),i,j,0.0)
 
-	print 'Adding recurrent connections\n'
-	for i in range(len(params['Ar'])):
-		conn = params['Ar'][i]
-		g.HorizontalProject(p2.Output(0), conn[0], conn[1], 
-							p1.Input(0), conn[2], conn[3],conn[4]) 
+	#print 'Adding recurrent connections\n'
+	#for i in range(len(params['Ar'])):
+	#	conn = params['Ar'][i]
+	#	g.HorizontalProject(p2.Output(0), conn[0], conn[1], 
+	#						p1.Input(0), conn[2], conn[3],conn[4]) 
 	
 	print 'Adding stimulus\n'
 	stim = []
-	for y_targ in xrange(params['sparsity_in']/2, params['N'], params['sparsity_in']):
-		for x_targ in xrange(params['sparsity_in']/2, params['N'], params['sparsity_in']):
+	for y_targ in range(params['N']):
+		for x_targ in range(params['N']):
 			exi_stimfile = exp_dir + 'y' + str(y_targ) + '_x' + str(x_targ) + '.txt'
-			stim.append(Stimulus(SpikeSource("file_generator", {'filename':exi_stimfile})))
-			p1.AddStimulus(stim[-1], 0)
-			stim[-1].AddTarget(x_targ, y_targ)
-
+			if (os.path.exists(exi_stimfile)):	
+				stim.append(Stimulus(SpikeSource("file_generator", {'filename':exi_stimfile})))
+				p1.AddStimulus(stim[-1], 0)
+				stim[-1].AddTarget(x_targ, y_targ)
 	SetSavePath(exp_dir + 'out')
 	print 'Saving to ' + exp_dir + 'out\n'
 	MapNetwork(g)
@@ -55,8 +55,9 @@ def runExperiment(params, exp_dir):
 	StopExp()
 	print 'Done'
 
-exp_num = 4
-params = setParams()
+reload(setParams)
+exp_num = 2
+params = setParams.setParams()
 print 'tau_syn is:' + str(params['tau_syn'])
 exp_dir = './lsm/data/exp' + str(exp_num) + '/';
 d = os.path.dirname(exp_dir)

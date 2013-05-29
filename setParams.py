@@ -22,7 +22,7 @@ def generateTestMatrix(N):
 	return Ar
 
 def generateReserviorMatrix(N):
-	numcon = 100  # numnber of connections in matrix
+	numcon = 10000  # numnber of connections in matrix
 	Ar = [dict() for i in range(numcon)]
 	for i in range(numcon):
 		conn = Ar[i]
@@ -35,20 +35,20 @@ def generateReserviorMatrix(N):
 
 def setParams():
 	N = 64
-	sparsity_in = 16 # number of positions to skip
+	sparsity_in = 8 # number of positions to skip
 	n_inputs = 1
 	Ain = np.random.random((n_inputs, N / sparsity_in, N / sparsity_in))
 	Ar = generateReserviorMatrix(N)
 	#Ar = generateTestMatrix(N)
 	params = {'N':N, 
 			  'sparsity_in':sparsity_in, 
-			  'x0':[1.0,0.0],
+			  'x0':[0.1,0.1],
 			  'tau':0.015, 
 			  'tau_ref':0.001, 
-			  'erev':[2.5,3.0], 
+			  'erev':[3.0,3.0], 
 			  'tau_syn':0.002,
-			  'g_max':[80., 1.], 
-			  'lam':[0.4,0.3],
+			  'g_max':[8., .1], 
+			  'lam':[0.4,0.4],
 			  't_xmt':0.005,
 			  'Ain':Ain, 'Ar':Ar}
 	return params
