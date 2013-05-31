@@ -7,35 +7,41 @@ import setParams
 import cPickle
 
 def runExperiment(params, exp_dir):
-	s1 = Soma("quadratic", {"tau_ref":params['tau_ref'], "tau":params['tau'], "x0":params['x0'][0]}) # Define a Soma model
-	syn1 = Synapse("syn_generic", {"erev":params['erev'][0], "tau_syn":params['tau_syn'], "g_max":params['g_max'][0], "lambda":params['lam'][0], "t_xmt":params['t_xmt']}) # Define a Synapse model
-	s1.AddSynapse(syn1)
-	n1 = Neuron("reservoir", s1)
+	s0 = Soma("quadratic", {"tau_ref":params['tau_ref'], "tau":params['tau'], "x0":params['x0'][0]}) # Define a Soma model
+	syn0e = Synapse("syn_generic", {"erev":params['erev_e'][0], "tau_syn":params['tau_syn'], "g_max":params['g_max'][0], "lambda":params['lam'][0], "t_xmt":params['t_xmt']})
+	syn0i = Synapse("syn_generic", {"erev":params['erev_i'][0], "tau_syn":params['tau_syn'], "g_max":params['g_max'][0], "lambda":params['lam'][0], "t_xmt":params['t_xmt']})
+	s0.AddSynapse(syn0e)
+	s0.AddSynapse(syn0i)
+	n0 = Neuron("reservoir", s0)
+	p0 = Pool(n0, params['N'], params['N'])
+	
+	s1 = Soma("quadratic", {"tau_ref":params['tau_ref'], "tau":params['tau'], "x0":params['x0'][1]}) # Define a Soma model
+	syn1e = Synapse("syn_generic", {"erev":params['erev_e'][1], "tau_syn":params['tau_syn'], "g_max":params['g_max'][1], "lambda":params['lam'][1], "t_xmt":params['t_xmt']})
+	syn1i = Synapse("syn_generic", {"erev":params['erev_i'][1], "tau_syn":params['tau_syn'], "g_max":params['g_max'][1], "lambda":params['lam'][1], "t_xmt":params['t_xmt']})
+	s1.AddSynapse(syn1e)
+	s1.AddSynapse(syn1i)
+	n1 = Neuron("connector", s1)
 	p1 = Pool(n1, params['N'], params['N'])
 	
-	s2 = Soma("quadratic", {"tau_ref":params['tau_ref'], "tau":params['tau'], "x0":params['x0'][1]}) # Define a Soma model
-	syn2 = Synapse("syn_generic", {"erev":params['erev'][1], "tau_syn":params['tau_syn'], "g_max":params['g_max'][1], "lambda":params['lam'][1], "t_xmt":params['t_xmt']}) # Define a Synapse model
-	s2.AddSynapse(syn2)
-	n2 = Neuron("connector", s2)
-	p2 = Pool(n2, params['N'], params['N'])
-	
 	g = Group("LSM")
+	g.AddChild(p0)
 	g.AddChild(p1)
-	g.AddChild(p2)
 	
-	g.VerticalProject(p1.Output(0),p2.Input(0))
+	g.VerticalProject(p0.Output(0),p1.Input(0))
 	
 	print 'Adding dummy horizontal connections\n'
 	for i in range(params['N']):
 		for j in range(params['N']):
-			g.HorizontalProject(p2.Output(0),i,j,p1.Input(0),i,j,0.0)
+			g.HorizontalProject(p1.Output(0),i,j,p0.Input(0),i,j,0.0)
 
-	#print 'Adding recurrent connections\n'
-	#for i in range(len(params['Ar'])):
-	#	conn = params['Ar'][i]
-	#	g.HorizontalProject(p2.Output(0), conn[0], conn[1], 
-	#						p1.Input(0), conn[2], conn[3],conn[4]) 
-	
+	print 'Adding recurrent connections\n'
+	for i in range(len(params['Ar'])):
+		conn = params['Ar'][i]
+		if con > 0:
+			g.HorizontalProject(p1.Output(0), conn[0], conn[1], p0.Input(0), conn[2], conn[3],conn[4]) # p0.syne added first
+		elif con < 0:
+			g.HorizontalProject(p1.Output(0), conn[0], conn[1], p0.Input(1), conn[2], conn[3],conn[4]) # p0.syni added second
+			
 	print 'Adding stimulus\n'
 	stim = []
 	for y_targ in range(params['N']):

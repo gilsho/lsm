@@ -42,13 +42,14 @@ def setParams():
 	#Ar = generateTestMatrix(N)
 	params = {'N':N, 
 			  'sparsity_in':sparsity_in, 
-			  'x0':[0.1,0.1],
+			  'x0':[0.1, 0.1],
 			  'tau':0.015, 
 			  'tau_ref':0.001, 
-			  'erev':[3.0,3.0], 
+			  'erev_e':[3.0, 3.0], 
+			  'erev_i':[0.5, 0.5], 
 			  'tau_syn':0.002,
 			  'g_max':[8., .1], 
-			  'lam':[0.4,0.4],
+			  'lam':[0.4, 0.1],
 			  't_xmt':0.005,
 			  'Ain':Ain, 'Ar':Ar}
 	return params
