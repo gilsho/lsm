@@ -60,7 +60,11 @@ parser = argparse.ArgumentParser(description='Generate spikes')
 parser.add_argument('exp_num', type=int, help='experiment number')
 parser.add_argument('wavfile1', type=str, help='a wav file listing spike rates and durations')
 parser.add_argument('wavfile2', type=str, help='a wav file listing spike rates and durations')
+parser.add_argument('desc', type=str, help='brief description of experiment')
+parser.add_argument('--seed', type=int, help='random number generator seed', default=1)
 args = parser.parse_args()
+
+np.random.seed(args.seed)
 
 exp_num = args.exp_num
 exp_dir = './data/exp' + str(exp_num) + '/';
@@ -73,6 +77,8 @@ params = setParams()
 datadir = './data/wav/'
 wavpath1 = datadir + args.wavfile1
 wavpath2 = datadir + args.wavfile2
+with open(exp_dir + 'README', 'w') as f:
+	f.write(wavpath1 + ' ' + wavpath2 + ' ' + args.desc + '\n')
 generateSpikes(wavpath1, params, exp_dir,0,params['N']/2)
 generateSpikes(wavpath2, params, exp_dir,params['N']/2,params['N'])
 
