@@ -45,8 +45,8 @@ def generateSpikes(filepath, params, exp_dir, ystart,yend):
 	
 	spk_times = generateSpikeTimes(times, rates)
 	
-	for y_targ in xrange(ystart+sparsity_in, yend, sparsity_in): # generate file for each neuron in sparsity pattern
-		for x_targ in xrange(sparsity_in/2, N, sparsity_in):
+	for x_targ in xrange(ystart+sparsity_in, yend, sparsity_in): # generate file for each neuron in sparsity pattern
+		for y_targ in xrange(sparsity_in/2, N, sparsity_in):
 			y_idx = (y_targ - sparsity_in/2) / sparsity_in
 			x_idx = (x_targ - sparsity_in/2) / sparsity_in
 			w = Ain[0, x_idx, y_idx]

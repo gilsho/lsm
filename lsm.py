@@ -34,13 +34,13 @@ def runExperiment(params, exp_dir):
 		for j in range(params['N']):
 			g.HorizontalProject(p1.Output(0),i,j,p0.Input(0),i,j,0.0)
 
-	# print 'Adding recurrent connections\n'
-	# for i in range(len(params['Ar'])):
-	# 	conn = params['Ar'][i]
-	# 	if conn[4] > 0:
-	# 		g.HorizontalProject(p1.Output(0), conn[0], conn[1], p0.Input(0), conn[2], conn[3], conn[4]) # p0.syne added first
-	# 	elif conn[4] < 0:
-	# 		g.HorizontalProject(p1.Output(0), conn[0], conn[1], p0.Input(1), conn[2], conn[3], -conn[4]) # p0.syni added second
+	print 'Adding recurrent connections\n'
+	for i in range(len(params['Ar'])):
+		conn = params['Ar'][i]
+		if conn[4] > 0:
+			g.HorizontalProject(p1.Output(0), conn[0], conn[1], p0.Input(0), conn[2], conn[3], conn[4]) # p0.syne added first
+		elif conn[4] < 0:
+			g.HorizontalProject(p1.Output(0), conn[0], conn[1], p0.Input(1), conn[2], conn[3], -conn[4]) # p0.syni added second
 			
 	print 'Adding stimulus\n'
 	stim = []
@@ -48,7 +48,7 @@ def runExperiment(params, exp_dir):
 		for x_targ in range(params['N']):
 			stimfile = exp_dir + 'y' + str(y_targ) + '_x' + str(x_targ) + '.txt'
 			if (os.path.exists(stimfile)):	
-				print 'Adding stimulus from ' + stimfile
+				# print 'Adding stimulus from ' + stimfile
 				stim.append(Stimulus(SpikeSource("file_generator", {'filename':stimfile})))
 				p0.AddStimulus(stim[-1], 0)
 				stim[-1].AddTarget(x_targ, y_targ)
