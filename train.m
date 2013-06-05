@@ -2,12 +2,17 @@ close all
 clear
 N = 64;
 
+experiment_inputs = [50,5; 100,200; 200,200; 200,500; 500,400; 100,20; 100,200];
+    
+feed_forward_input = 1:5;
+tanya_input = 6:7;
+chips = 1;
+
 for expNum = 1:7
-    chips = 1;
+   
     exp_dir = ['data/exp',num2str(expNum),'/'];
     exp_file = [exp_dir,'out.spk'];
-
-    [sparse_spikes, coord, ts] = readNGBinSparse_reorder(exp_file,N,N,chips);
+    sparse_spikes = readNGBinSparse_reorder(exp_file,N,N,chips);
     full_spikes = full(cell2mat(sparse_spikes));
 
     %Use 90% of the data for training, 10% for testing
@@ -30,9 +35,6 @@ for expNum = 1:7
         test_rate(i) = sum(test_spikes(i,:))/(double(test_length)/10000.0);
     end
 
-    %Experiment 0 inputs [0 200] crashed when reading it
-    experiment_inputs = [50,5; 100,200; 200,200; 200,500; 500,400; 100,20; 100,200];
-
     % How is the input layed out????
     input = double(diag([ones(1,N*N/2)*experiment_inputs(expNum,1), ones(1,N*N/2)*experiment_inputs(expNum,2)]));
 
@@ -41,24 +43,47 @@ for expNum = 1:7
     fprintf('test error: %f\n', norm(input*model(:,expNum)-test_rate')^2);
 end
 
+
+
 save('current_model', 'model')
 figure
+subplot(211)
 hold on
 grid on
 for i = 1:N*N  
-    plot(model(i,1:5))
+    plot(model(i,1:5), experiment_inputs(feed_forward_input,1))
 end
 title('Feed Forward Experiment Weights')
-xlabel('Experiment #')
+xlabel('Current 1')
 ylabel('Weight')
-
-figure
+subplot(212)
 hold on
 grid on
 for i = 1:N*N  
-    plot(model(i,6:7))
+    plot(model(i,1:5), experiment_inputs(feed_forward_input,2))
+end
+title('Feed Forward Experiment Weights')
+xlabel('Current 2')
+ylabel('Weight')
+
+
+figure
+subplot(211)
+hold on
+grid on
+for i = 1:N*N  
+    plot(model(i,6:7), experiment_inputs(tanya_input,1))
 end
 title('Tanya Experiment Weights')
-xlabel('Experiment #')
+xlabel('Current 1')
 ylabel('Weight')
- 
+
+subplot(212)
+hold on
+grid on
+for i = 1:N*N  
+    plot(model(i,6:7), experiment_inputs(tanya_input,2))
+end
+title('Tanya Experiment Weights')
+xlabel('Current 2')
+ylabel('Weight')
