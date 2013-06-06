@@ -30,9 +30,9 @@ train_set = zeros(int64(total_samples*TRAIN_FRAC),neurons);
 cv_set = zeros(int64(total_samples*CV_FRAC),neurons);
 test_set = zeros(int64(total_samples*TEST_FRAC),neurons);
 
-train_labels = zeros(int64(total_samples*TRAIN_FRAC,1));
-cv_labels = zeros(int64(total_samples*CV_FRAC));
-test_labels = zeros(int64(total_samples*TEST_FRAC));
+train_labels = zeros(int64(total_samples*TRAIN_FRAC),1);
+cv_labels = zeros(int64(total_samples*CV_FRAC),1);
+test_labels = zeros(int64(total_samples*TEST_FRAC),1);
 
 train_index = 0;
 cv_index = 0;
@@ -80,6 +80,41 @@ model = (train_set\train_labels);
 fprintf('training error: %f\n', norm(train_set*model-train_labels)^2);
 fprintf('test error: %f\n', norm(cv_set*model-cv_labels)^2);
 
+ymin = -400;
+ymax = 400;
+figure
+subplot(221);
+plot(train_labels);
+xlabel('time (msec)')
+ylabel('rate difference');
+title('true training labels');
+ylim([ymin ymax]);
+
+subplot(222);
+plot(train_set*model);
+xlabel('time (msec)')
+ylabel('rate difference');
+title('performance on training set');
+ylim([ymin ymax]);
+
+
+subplot(223);
+plot(test_labels);
+xlabel('time (msec)')
+ylabel('rate difference');
+title('true test labels');
+ylim([ymin ymax]);
+
+
+subplot(224);
+plot(test_set*model);
+xlabel('time (msec)')
+ylabel('rate difference');
+title('performance on test set');
+ylim([ymin ymax]);
+
+
+print -dpng 'ffplot';
 
 % save('current_model', 'model')
 % figure
